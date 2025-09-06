@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -28,6 +28,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  justify-content: center;
+  flex-direction: column;
 }
 
 h1 {
@@ -93,4 +95,29 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+input {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.8em 1.2em;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+}
+
+.result {
+  padding: 20px;
+  border: 1px solid #fff;
+  margin-top: 20px;
+  width: 300px;
+  text-align: center;
+}
+
+.result dl,
+.result dt,
+.result dd {
+  margin: 0;
 }
