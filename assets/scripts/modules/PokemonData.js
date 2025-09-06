@@ -1,7 +1,12 @@
 // Show suggestions that match user's input
 export const getMatchingPokemons = (pokemons, currentInput) => {
-  const matchedPokeNames = pokemons.filter(pokemon => pokemon.name.startsWith(currentInput));
-  const firstFiveMatches = matchedPokeNames.slice(0, 5);
+  let matchedPokeNames = {};
+  let firstFiveMatches = {};
+  if(currentInput != "") {
+    matchedPokeNames = pokemons.filter(pokemon => pokemon.name.startsWith(currentInput));
+    firstFiveMatches = matchedPokeNames.slice(0, 5);
+  }
+  
   return firstFiveMatches;
 }
 
@@ -10,6 +15,9 @@ export const showSuggestions = (pokeNames) => {
   const numOfPokes = Object.keys(pokeNames).length;
   for(let i = 0; i < numOfPokes; i++){
     htmlData += `<div class="suggestion">${pokeNames[i].name}</div>`;
+  }
+  if (numOfPokes === 0) {
+    htmlData = "";
   }
   document.querySelector("#js-result").innerHTML = htmlData;
 

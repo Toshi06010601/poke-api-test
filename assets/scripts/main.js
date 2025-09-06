@@ -15,6 +15,7 @@ document.querySelector("#js-input").addEventListener("input", (e) => {
   const currentInput = e.target.value;
   const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
   showSuggestions(matchedPokemons);
+
 })
 
 
