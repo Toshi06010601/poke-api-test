@@ -17,9 +17,13 @@ export const showData = (data) => {
     <dd>ID: ${data.id}</dd>
     <dt>Types: ${data.types.join(", ")}</dt>
   </dl>`
-  document.querySelector("#js-result").innerHTML = htmlData;
+  document.querySelector("#js-result")
+  .innerHTML = htmlData
+  .style.display = ''
+
 }
 
+// Play the selected pokemon's cry
 export const autoPlayCry = (data) => {
   const crySound = new Audio(data.cry);
   crySound.play();
