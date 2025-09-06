@@ -109,12 +109,16 @@ input {
 }
 
 .result {
-  display: none;
   padding: 20px;
   border: 1px solid #fff;
   margin-top: 20px;
   width: 300px;
   text-align: center;
+}
+
+.suggestion {
+  border: solid 2px black;
+  margin-bottom: 2px;
 }
 
 .result dl,

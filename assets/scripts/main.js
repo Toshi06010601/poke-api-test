@@ -1,7 +1,7 @@
 import '../styles/style.css';
 import { getPokemonData, getAllPokeNames } from './modules/HttpRequest';
-import { extractData, showData, autoPlayCry } from './modules/PokemonData';
 import { getPokeNamesFromLocal, cachePokeNamesInLocal} from './modules/LocalStorage';
+import { extractData, showData, autoPlayCry, getMatchingPokemons, showSuggestions} from './modules/PokemonData';
 
 // Initial setup for Name search
 document.addEventListener("DOMContentLoaded", async () => {
@@ -10,7 +10,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // Show suggestion as user types each letter in search field
-
+document.querySelector("#js-input").addEventListener("input", (e) => {
+  const pokeNames = getPokeNamesFromLocal();
+  const currentInput = e.target.value;
+  const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
+  showSuggestions(matchedPokemons);
+})
 
 
 const getInputName = (e) => {
