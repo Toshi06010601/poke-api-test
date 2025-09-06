@@ -6,7 +6,8 @@ export const extractData = (pokemonData) => {
   pokemonData.types.forEach(typeItem => {
     types.push(typeItem.type.name);
   });
-  return {id, name, img, types}
+  const cry = pokemonData.cries.latest;
+  return {id, name, img, types, cry}
 }
 
 export const showData = (data) => {
@@ -14,7 +15,12 @@ export const showData = (data) => {
     <dt>Name: ${data.name}</dt>
     <dd><img src="${data.img}" alt=""></dd>
     <dd>ID: ${data.id}</dd>
-    <dt>Types: ${data.types.join(", ")}</dd>
+    <dt>Types: ${data.types.join(", ")}</dt>
   </dl>`
   document.querySelector("#js-result").innerHTML = htmlData;
+}
+
+export const autoPlayCry = (data) => {
+  const crySound = new Audio(data.cry);
+  crySound.play();
 }
