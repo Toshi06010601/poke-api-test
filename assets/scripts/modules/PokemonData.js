@@ -1,33 +1,32 @@
 // Show suggestions that match user's input
 export const getMatchingPokemons = (pokemons, currentInput) => {
-  let matchedPokeNames = {};
-  let firstFiveMatches = {};
+  let matchedPokeNames = [];
+  let firstFiveMatches = [];
+
   if(currentInput != "") {
     matchedPokeNames = pokemons.filter(pokemon => pokemon.name.startsWith(currentInput));
     firstFiveMatches = matchedPokeNames.slice(0, 5);
   }
-  
+
   return firstFiveMatches;
 }
 
 export const showSuggestions = (pokeNames) => {
-  let htmlData = "";
-  const numOfPokes = Object.keys(pokeNames).length;
-  for(let i = 0; i < numOfPokes; i++){
-    htmlData += `<div class="suggestion">${pokeNames[i].name}</div>`;
-  }
-  if (numOfPokes === 0) {
-    htmlData = "";
-  }
+  const htmlData = pokeNames
+  .map(pokeName => {
+    return `<div class="suggestion">${pokeName.name}</div>`;
+  })
+  .join("");
+
   document.querySelector("#js-result").innerHTML = htmlData;
 
   document.querySelectorAll(".suggestion").forEach(suggestion => {
-  suggestion.addEventListener("click", (e) => {
-    const $button = document.querySelector("#js-button");
-    const $inputField = document.querySelector("#js-input");
-    $inputField.value = e.target.textContent;
-    $button.click();
-  })
+    suggestion.addEventListener("click", (e) => {
+      const $button = document.querySelector("#js-button");
+      const $inputField = document.querySelector("#js-input");
+      $inputField.value = e.target.textContent;
+      $button.click();
+    })
   })
 
 }
