@@ -28,4 +28,15 @@ const submitHandler = async (e) => {
   showData(extractedData);
   autoPlayCry(extractedData);
 }
-document.querySelector("#js-form").addEventListener("submit", (e) => submitHandler(e));
+
+document.querySelector("#js-form").addEventListener("submit", async (e) => {
+  await submitHandler(e);
+
+  // Add zoom-in effect to the pokemon image 
+  const pokemonImg = document.querySelector(".pokemonImg");
+  pokemonImg.addEventListener("load", () => {
+    setTimeout(() => {
+      pokemonImg.classList.toggle("zoom-in");
+    }, 500);
+  });
+});

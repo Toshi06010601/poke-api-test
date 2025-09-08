@@ -116,13 +116,40 @@ input {
   text-align: center;
 }
 
-.suggestion {
+.suggestion-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestion-item {
+  transition: transform 0.5s, opacity 0.5s;
   border: solid 2px black;
-  margin-bottom: 2px;
+  border-bottom: none; 
+}
+
+.suggestion-item:last-child {
+ border-bottom: solid 2px black;
+}
+
+.suggestion-item:hover {
+   transform: scale(1.1);
+   opacity: 0.8;
+   border-bottom: solid 2px black;
+   cursor: pointer;
 }
 
 .result dl,
 .result dt,
 .result dd {
   margin: 0;
+}
+
+.pokemonImg {
+  transition: all 1s;
+  opacity: 0;
+}
+
+.zoom-in {
+  transform: scale(1.2);
+  opacity: 1;
 }

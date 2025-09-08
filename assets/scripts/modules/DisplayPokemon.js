@@ -20,7 +20,7 @@ export const extractData = (pokemonData) => {
 export const showData = (data) => {
   const htmlData = `<dl>
     <dt>Name: ${data.name}</dt>
-    <dd><img src="${data.img}" alt=""></dd>
+    <dd><img src="${data.img}" alt="" class="pokemonImg"></dd>
     <dd>ID: ${data.id}</dd>
     <dt>Types: ${data.types.join(", ")}</dt>
   </dl>`
@@ -30,5 +30,8 @@ export const showData = (data) => {
 
 export const autoPlayCry = (data) => {
   const crySound = new Audio(data.cry);
+
+  setTimeout(() => {
   crySound.play();
+  }, 500);
 }
