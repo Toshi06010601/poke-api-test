@@ -153,3 +153,11 @@ input {
   transform: scale(1.2);
   opacity: 1;
 }
+
+.captured-list {
+  padding: 20px;
+  border: 1px solid #fff;
+  margin-top: 20px;
+  width: 300px;
+  text-align: center;
+}
