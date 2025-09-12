@@ -3,15 +3,14 @@ import { getPokemonData, getAllPokeNames } from './modules/HttpRequest';
 import { getPokeNamesFromLocal, cachePokeNamesInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions} from './modules/SuggestPokemons';
 import { getInputName, extractData, showData, autoPlayCry } from './modules/DisplayPokemon';
-import { fetchCapturedData } from './modules/database/pokemonService';
+import { displayCapturedData, capturePokemon } from './modules/database/pokemonService';
 
-// Store Pokemon names in local storage
+// Store all Pokemon names in local storage
 document.addEventListener("DOMContentLoaded", async () => {
   const pokeNames = await getAllPokeNames();
   cachePokeNamesInLocal(pokeNames.results);
+  displayCapturedData();
 });
-
-fetchCapturedData();
 
 // Show suggestion as user types in search field
 document.querySelector('input[name="pokeName"]')
@@ -30,7 +29,14 @@ const submitHandler = async (e) => {
   const extractedData = extractData(pokemonData)
   showData(extractedData);
   autoPlayCry(extractedData);
+
+  // Add the pokemon to the database
+  document.querySelector("#js-capture").addEventListener("submit", (e) => {
+    capturePokemon(e);
+  });
 }
+
+
 
 document.querySelector("#js-form").addEventListener("submit", async (e) => {
   await submitHandler(e);

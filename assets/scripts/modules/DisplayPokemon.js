@@ -23,7 +23,12 @@ export const showData = (data) => {
     <dd><img src="${data.img}" alt="" class="pokemonImg"></dd>
     <dd>ID: ${data.id}</dd>
     <dt>Types: ${data.types.join(", ")}</dt>
-  </dl>`
+  </dl>
+  <form action="#" method="post" id="js-capture">
+  <input type="hidden" name="name" value="${data.name}">
+  <input type="hidden" name="img" value="${data.img}">
+  <button type="submit">Capture</button>
+  </form>`
   document.querySelector("#js-result")
   .innerHTML = htmlData
 }
