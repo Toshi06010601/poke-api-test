@@ -1,7 +1,7 @@
 import { db } from "./dbConfig.js"
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 
-export const displayCapturedData = async () => {
+export const showCapturedData = async () => {
   const querySnapshot = await getDocs(collection(db, "captured"));
 
   let htmlData = "";
@@ -9,7 +9,7 @@ export const displayCapturedData = async () => {
     htmlData += 
     `<dl>
       <dt><img src="${doc.data().img}" alt=""></dt>
-      <dd>${doc.data().name}</dd>
+      <dd class="captured-pokemon">${doc.data().name}</dd>
     </dl>`;
   });
 
@@ -17,20 +17,31 @@ export const displayCapturedData = async () => {
 };
 
 
-export const capturePokemon = async (e) => {
+export const captureNewPokemon = async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
+  const targetPokemonName = formData.get("name");
 
-  try {
-    const docRef = await addDoc(collection(db, "captured"), {
-      name: formData.get("name"),
-      img: formData.get("img")
-    });
-    console.log("Added pokemon: ", formData.get("name"));
-    location.reload();
-  } catch (e) {
-    console.error("Error adding pokemon:", e);
+  // Add the selected pokemon to the captured database if it hasn't been captured before
+  const capturedPokemons = document.querySelectorAll(".captured-pokemon");
+  const samePokemon = [...capturedPokemons].filter(pokemon => targetPokemonName === pokemon.textContent);
+  if(samePokemon.length === 0) {
+      try {
+      const docRef = await addDoc(collection(db, "captured"), {
+        name: targetPokemonName,
+        img: formData.get("img")
+      });
+      location.reload();
+      } catch (e) {
+      console.error("Error adding pokemon:", e);
+      }
+  } else {
+    alert(`${targetPokemonName} was already captured in the past`);
   }
 
+}
+
+export const releasePokemon = async (e) => {
+  
 }
 

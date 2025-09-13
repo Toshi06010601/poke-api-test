@@ -3,13 +3,13 @@ import { getPokemonData, getAllPokeNames } from './modules/HttpRequest';
 import { getPokeNamesFromLocal, cachePokeNamesInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions} from './modules/SuggestPokemons';
 import { getInputName, extractData, showData, autoPlayCry } from './modules/DisplayPokemon';
-import { displayCapturedData, capturePokemon } from './modules/database/pokemonService';
+import { showCapturedData, captureNewPokemon } from './modules/database/pokemonService';
 
 // Store all Pokemon names in local storage
 document.addEventListener("DOMContentLoaded", async () => {
   const pokeNames = await getAllPokeNames();
   cachePokeNamesInLocal(pokeNames.results);
-  displayCapturedData();
+  showCapturedData();
 });
 
 // Show suggestion as user types in search field
@@ -32,7 +32,7 @@ const submitHandler = async (e) => {
 
   // Add the pokemon to the database
   document.querySelector("#js-capture").addEventListener("submit", (e) => {
-    capturePokemon(e);
+    captureNewPokemon(e);
   });
 }
 
