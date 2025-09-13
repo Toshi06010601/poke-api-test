@@ -3,14 +3,24 @@ import { getPokemonData, getAllPokeNames } from './modules/HttpRequest';
 import { getPokeNamesFromLocal, cachePokeNamesInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions} from './modules/SuggestPokemons';
 import { getInputName, extractData, showData, autoPlayCry } from './modules/DisplayPokemon';
-import { showCapturedData, captureNewPokemon } from './modules/database/pokemonService';
+import { showCapturedData, captureNewPokemon, releasePokemon } from './modules/database/pokemonService';
 
 // Store all Pokemon names in local storage
 document.addEventListener("DOMContentLoaded", async () => {
   const pokeNames = await getAllPokeNames();
   cachePokeNamesInLocal(pokeNames.results);
-  showCapturedData();
-});
+  await showCapturedData();
+  const releaseBtns = document.querySelectorAll(".release-btn");
+      if(releaseBtns.length > 0) {
+        releaseBtns.forEach(Btn => {
+          Btn.addEventListener("click", (e) => {
+            releasePokemon(e);
+          })
+        })
+
+      }
+
+  });
 
 // Show suggestion as user types in search field
 document.querySelector('input[name="pokeName"]')
@@ -30,7 +40,7 @@ const submitHandler = async (e) => {
   showData(extractedData);
   autoPlayCry(extractedData);
 
-  // Add the pokemon to the database
+  // Add the pokemon to the database when the capture button clicked
   document.querySelector("#js-capture").addEventListener("submit", (e) => {
     captureNewPokemon(e);
   });

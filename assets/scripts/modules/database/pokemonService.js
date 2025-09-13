@@ -1,8 +1,8 @@
 import { db } from "./dbConfig.js"
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { doc, query, orderBy, collection, getDocs, addDoc, deleteDoc } from 'firebase/firestore';
 
 export const showCapturedData = async () => {
-  const querySnapshot = await getDocs(collection(db, "captured"));
+  const querySnapshot = await getDocs(query(collection(db, "captured"), orderBy("captured_at")));
 
   let htmlData = "";
   querySnapshot.forEach((doc) => {
@@ -10,7 +10,9 @@ export const showCapturedData = async () => {
     `<dl>
       <dt><img src="${doc.data().img}" alt=""></dt>
       <dd class="captured-pokemon">${doc.data().name}</dd>
-    </dl>`;
+    </dl>
+    <button data-id="${doc.id}" class="release-btn">Release</button>
+    `;
   });
 
   document.querySelector("#js-captured").innerHTML = htmlData;
@@ -29,7 +31,8 @@ export const captureNewPokemon = async (e) => {
       try {
       const docRef = await addDoc(collection(db, "captured"), {
         name: targetPokemonName,
-        img: formData.get("img")
+        img: formData.get("img"),
+        captured_at: new Date(),
       });
       location.reload();
       } catch (e) {
@@ -42,6 +45,13 @@ export const captureNewPokemon = async (e) => {
 }
 
 export const releasePokemon = async (e) => {
-  
+  const docId = e.target.dataset.id;
+  try {
+    await deleteDoc(doc(db, "captured", docId));
+    location.reload();
+  }
+  catch (e) {
+    console.error("Failed to release the pokemon:", e)
+  }
 }
 
