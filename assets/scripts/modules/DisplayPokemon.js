@@ -18,16 +18,18 @@ export const extractData = (pokemonData) => {
 }
 
 export const showData = (data) => {
-  const htmlData = `<dl>
+  const htmlData = `
+  <dl>
     <dt>Name: ${data.name}</dt>
     <dd><img src="${data.img}" alt="" class="pokemonImg"></dd>
     <dd>ID: ${data.id}</dd>
     <dt>Types: ${data.types.join(", ")}</dt>
   </dl>
   <form action="#" method="post" id="js-capture">
-  <input type="hidden" name="name" value="${data.name}">
-  <input type="hidden" name="img" value="${data.img}">
-  <button type="submit">Capture</button>
+    <input type="hidden" name="name" value="${data.name}">
+    <input type="hidden" name="img" value="${data.img}">
+    <input type="hidden" name="cry" value="${data.cry}">
+    <button type="submit" class="pokeball"></button>
   </form>`
   document.querySelector("#js-result")
   .innerHTML = htmlData

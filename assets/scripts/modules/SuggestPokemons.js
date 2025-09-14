@@ -19,11 +19,14 @@ export const showSuggestions = (pokeNames) => {
   // Add event listener for each suggestion to enable form submission upon click
   document.querySelectorAll(".suggestion-item")
   .forEach(suggestion => {
+    // Play sound when a mouse hover over the suggestion
     suggestion.addEventListener("mouseover", (e)=>{
       const hoverSound = new Audio("/hover_sound.mp3");
       hoverSound.currentTime = 0;
       hoverSound.play();
     })
+
+    // 
     suggestion.addEventListener("click", (e) => {
       // Play select sound
       const selectSound = new Audio("/select_sound.mp3");

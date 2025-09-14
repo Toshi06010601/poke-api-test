@@ -46,8 +46,6 @@ const submitHandler = async (e) => {
   });
 }
 
-
-
 document.querySelector("#js-form").addEventListener("submit", async (e) => {
   await submitHandler(e);
 

@@ -4,18 +4,24 @@ import { doc, query, orderBy, collection, getDocs, addDoc, deleteDoc } from 'fir
 export const showCapturedData = async () => {
   const querySnapshot = await getDocs(query(collection(db, "captured"), orderBy("captured_at")));
 
-  let htmlData = "";
+  let htmlData = '';
   querySnapshot.forEach((doc) => {
     htmlData += 
-    `<dl>
-      <dt><img src="${doc.data().img}" alt=""></dt>
+    `<div><dl>
+      <dt><img src="${doc.data().img}" alt="" class="captured-pokemon-img" data-cry="${doc.data().cry}"></dt>
       <dd class="captured-pokemon">${doc.data().name}</dd>
     </dl>
-    <button data-id="${doc.id}" class="release-btn">Release</button>
-    `;
+    <button data-id="${doc.id}" class="release-btn"></button>
+    </div>`;
   });
 
   document.querySelector("#js-captured").innerHTML = htmlData;
+  document.querySelectorAll(".captured-pokemon-img").forEach((img)=> {
+    img.addEventListener("click", (e) => {
+      const crySound = new Audio(e.target.dataset.cry);
+      crySound.play();
+    })
+  })
 };
 
 
@@ -24,7 +30,7 @@ export const captureNewPokemon = async (e) => {
   const formData = new FormData(e.target);
   const targetPokemonName = formData.get("name");
 
-  // Add the selected pokemon to the captured database if it hasn't been captured before
+  // Add the selected pokemon if it hasn't been captured before
   const capturedPokemons = document.querySelectorAll(".captured-pokemon");
   const samePokemon = [...capturedPokemons].filter(pokemon => targetPokemonName === pokemon.textContent);
   if(samePokemon.length === 0) {
@@ -32,6 +38,7 @@ export const captureNewPokemon = async (e) => {
       const docRef = await addDoc(collection(db, "captured"), {
         name: targetPokemonName,
         img: formData.get("img"),
+        cry: formData.get("cry"),
         captured_at: new Date(),
       });
       location.reload();

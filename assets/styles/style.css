@@ -138,15 +138,37 @@ input {
    cursor: pointer;
 }
 
+
 .result dl,
 .result dt,
 .result dd {
   margin: 0;
 }
 
+.result button {
+  margin-top: 15px;
+}
+
 .pokemonImg {
   transition: all 1s;
   opacity: 0;
+}
+
+.pokeball {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-image: url("/pokeball.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  padding: 0;
+  transform: scale(1);
+  transform: scale 0.5s ease;
+}
+
+.pokeball:hover {
+  transform: scale(1.2);
 }
 
 .zoom-in {
@@ -155,9 +177,60 @@ input {
 }
 
 .captured-list {
-  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 40px;
   border: 1px solid #fff;
   margin-top: 20px;
-  width: 300px;
+  width: 80%;
   text-align: center;
+}
+
+.captured-list div,
+.captured-list dl,
+.captured-list dt,
+.captured-list dd {
+  margin: 0;
+}
+
+.captured-list div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.captured-pokemon-img {
+  cursor: pointer;
+}
+
+.release-btn {
+  position: relative;
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 70%;
+  background-image: url("/pokeball-open.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  padding: 0;
+  transform: scale(1);
+  transform: scale 0.5s ease;
+}
+
+.release-btn:hover {
+  transform: scale(1.2);
+}
+
+.release-btn:hover::before {
+  content: "Release";
+  font-size: 0.8em;
+  font-weight: 300;
+  font-family: inherit;
+  width: fit-content;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
 }
