@@ -7,8 +7,8 @@ export const showCapturedData = async () => {
   let htmlData = '';
   querySnapshot.forEach((doc) => {
     htmlData += 
-    `<div><dl>
-      <dt><img src="${doc.data().img}" alt="" class="captured-pokemon-img" data-cry="${doc.data().cry}"></dt>
+    `<div class="captured-item"><dl>
+      <dt><img src="${doc.data().img}" alt="" data-cry="${doc.data().cry}"></dt>
       <dd class="captured-pokemon">${doc.data().name}</dd>
     </dl>
     <button data-id="${doc.id}" class="release-btn"></button>
@@ -16,7 +16,9 @@ export const showCapturedData = async () => {
   });
 
   document.querySelector("#js-captured").innerHTML = htmlData;
-  document.querySelectorAll(".captured-pokemon-img").forEach((img)=> {
+
+  // Add eventlistener to play cry when the image gets clicked
+  document.querySelectorAll(".captured-item img").forEach((img)=> {
     img.addEventListener("click", (e) => {
       const crySound = new Audio(e.target.dataset.cry);
       crySound.play();

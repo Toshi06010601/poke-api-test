@@ -1,4 +1,4 @@
-:root {
+:root, ::placeholder {
   font-family: "Press Start 2P", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,6 +11,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::placeholder {
+  line-height: 1;
+  font-size: 0.6rem;
+  font-weight: 100;
+  color: #aaa;
+  background-color: transparent;
 }
 
 a {
@@ -77,7 +85,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #888;
 }
 button:focus,
 button:focus-visible {
@@ -108,6 +116,11 @@ input {
   gap: 10px;
 }
 
+.form input {
+  font-weight: 100;
+  
+}
+
 .result {
   padding: 20px;
   border: 1px solid #fff;
@@ -116,6 +129,8 @@ input {
   text-align: center;
 }
 
+
+/* Search suggestion section */
 .suggestion-list {
   display: flex;
   flex-direction: column;
@@ -139,6 +154,7 @@ input {
 }
 
 
+/* Pokemon search result section */
 .result dl,
 .result dt,
 .result dd {
@@ -154,6 +170,11 @@ input {
   opacity: 0;
 }
 
+.zoom-in {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
 .pokeball {
   width: 30px;
   height: 30px;
@@ -162,6 +183,7 @@ input {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
+  background-color: transparent;
   padding: 0;
   transform: scale(1);
   transform: scale 0.5s ease;
@@ -171,20 +193,19 @@ input {
   transform: scale(1.2);
 }
 
-.zoom-in {
-  transform: scale(1.2);
-  opacity: 1;
-}
 
+/* Captured pokemons section */
 .captured-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  justify-content: center;
+  gap: 5px;
   padding: 40px;
-  border: 1px solid #fff;
+  border: 3px dashed #fff;
   margin-top: 20px;
   width: 80%;
   text-align: center;
+  border-radius: 5px;
 }
 
 .captured-list div,
@@ -194,14 +215,30 @@ input {
   margin: 0;
 }
 
-.captured-list div {
+.captured-item {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  background-color: #bbb;
+  padding: 15px;
+  border-radius: 5px;
 }
 
-.captured-pokemon-img {
+.captured-item dt {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.captured-item dd {
+  font-size: 0.8em;
+}
+
+.captured-item img {
   cursor: pointer;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .release-btn {
@@ -214,6 +251,7 @@ input {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
+  background-color: transparent;
   padding: 0;
   transform: scale(1);
   transform: scale 0.5s ease;
@@ -225,12 +263,13 @@ input {
 
 .release-btn:hover::before {
   content: "Release";
-  font-size: 0.8em;
+  font-size: 0.5em;
   font-weight: 300;
   font-family: inherit;
+  color: #1a1a1a;
   width: fit-content;
   position: absolute;
-  top: 110%;
+  top: 50%;
   left: 50%;
   transform: translateX(-50%);
 }
