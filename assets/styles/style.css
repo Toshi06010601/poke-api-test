@@ -1,4 +1,4 @@
-:root, ::placeholder {
+:root, ::placeholder, input[type="text"] {
   font-family: "Press Start 2P", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -13,12 +13,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-::placeholder {
+::placeholder, input[type="text"] {
   line-height: 1;
-  font-size: 0.6rem;
-  font-weight: 100;
+  font-size: 1rem;
+  font-weight: 200;
   color: #aaa;
   background-color: transparent;
+}
+
+input[type="text"] {
+  color: #fff;
 }
 
 a {
@@ -85,7 +89,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #888;
+  border-color: transparent;
 }
 button:focus,
 button:focus-visible {
@@ -116,14 +120,9 @@ input {
   gap: 10px;
 }
 
-.form input {
-  font-weight: 100;
-  
-}
-
 .result {
   padding: 20px;
-  border: 1px solid #fff;
+  border: 3px dotted #ccc;
   margin-top: 20px;
   width: 300px;
   text-align: center;
@@ -195,15 +194,22 @@ input {
 
 
 /* Captured pokemons section */
+.capture-section {
+  border: 3px dotted #ccc;
+  width: 90%;
+  text-align: center;
+}
+
+.capture-section h3 {
+    margin: 20px 0 0;
+}
+
 .captured-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 5px;
-  padding: 40px;
-  border: 3px dashed #fff;
-  margin-top: 20px;
-  width: 80%;
+  padding: 20px 40px 40px 40px;
   text-align: center;
   border-radius: 5px;
 }
@@ -224,6 +230,10 @@ input {
   border-radius: 5px;
 }
 
+.captured-item dl {
+  width: 150px;
+}
+
 .captured-item dt {
   width: 150px;
   height: 150px;
@@ -232,6 +242,7 @@ input {
 
 .captured-item dd {
   font-size: 0.8em;
+  text-wrap: wrap;
 }
 
 .captured-item img {
@@ -259,9 +270,10 @@ input {
 
 .release-btn:hover {
   transform: scale(1.2);
+  border-color: transparent;
 }
 
-.release-btn:hover::before {
+/* .release-btn:hover::before {
   content: "Release";
   font-size: 0.5em;
   font-weight: 300;
@@ -272,4 +284,4 @@ input {
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
-}
+} */
