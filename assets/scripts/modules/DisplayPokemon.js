@@ -1,3 +1,5 @@
+import { addNewPokemon } from "./database/pokemonService";
+
 // When showing individual pokemon data
 export const getInputName = (e) => {
   const form = new FormData(e.target);
@@ -21,11 +23,11 @@ export const showData = (data) => {
   const htmlData = `
   <dl>
     <dt>Name: ${data.name}</dt>
-    <dd><img src="${data.img}" alt="" class="pokemonImg"></dd>
+    <dd class="imgFrame"><img src="${data.img}" alt="" class="pokemonImg"></dd>
     <dd>ID: ${data.id}</dd>
     <dt>Types: ${data.types.join(", ")}</dt>
   </dl>
-  <form action="#" method="post" id="js-capture">
+  <form action="" method="post" id="js-capture">
     <input type="hidden" name="name" value="${data.name}">
     <input type="hidden" name="img" value="${data.img}">
     <input type="hidden" name="cry" value="${data.cry}">
@@ -41,4 +43,22 @@ export const autoPlayCry = (data) => {
   setTimeout(() => {
   crySound.play();
   }, 500);
+}
+
+export const captureNewPokemon = async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+
+  // Check if it has been already captured
+  const capturedPokemons = document.querySelectorAll(".captured-pokemon");
+  const samePokemon = [...capturedPokemons].filter(pokemon => formData.get("name") === pokemon.textContent);
+
+  // Add the pokemon if not captured yet
+  if(samePokemon.length === 0) {
+      await addNewPokemon(formData.get("name"), formData.get("img"), formData.get("cry"));
+      location.reload();
+  } else {
+    alert(`${formData.get("name")} was already captured in the past`);
+  }
+
 }

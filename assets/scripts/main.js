@@ -2,24 +2,18 @@ import '../styles/style.css';
 import { getPokemonData, getAllPokeNames } from './modules/HttpRequest';
 import { getPokeNamesFromLocal, cachePokeNamesInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions} from './modules/SuggestPokemons';
-import { getInputName, extractData, showData, autoPlayCry } from './modules/DisplayPokemon';
-import { showCapturedData, captureNewPokemon, releasePokemon } from './modules/database/pokemonService';
+import { getInputName, extractData, showData, autoPlayCry, captureNewPokemon } from './modules/DisplayPokemon';
+import { fetchCapturedPokemons } from './modules/database/pokemonService';
+import { showCapturedPokemons, releasePokemon, playCryOnClick } from './modules/ListCapturedPokemons';
 
 // Store all Pokemon names in local storage
 document.addEventListener("DOMContentLoaded", async () => {
   const pokeNames = await getAllPokeNames();
   cachePokeNamesInLocal(pokeNames.results);
-  await showCapturedData();
-  const releaseBtns = document.querySelectorAll(".release-btn");
-      if(releaseBtns.length > 0) {
-        releaseBtns.forEach(Btn => {
-          Btn.addEventListener("click", (e) => {
-            releasePokemon(e);
-          })
-        })
-
-      }
-
+  const querySnapshot = await fetchCapturedPokemons();
+  await showCapturedPokemons(querySnapshot);
+  playCryOnClick();
+  await releasePokemon();
   });
 
 // Show suggestion as user types in search field
@@ -40,9 +34,9 @@ const submitHandler = async (e) => {
   showData(extractedData);
   autoPlayCry(extractedData);
 
-  // Add the pokemon to the database when the capture button clicked
-  document.querySelector("#js-capture").addEventListener("submit", (e) => {
-    captureNewPokemon(e);
+  // If pokeball is clicked, capture the pokemon
+  document.querySelector("#js-capture").addEventListener("submit", async (e) => {
+    await captureNewPokemon(e);
   });
 }
 
