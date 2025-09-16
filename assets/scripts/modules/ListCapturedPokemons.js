@@ -15,8 +15,8 @@ export const showCapturedPokemons = (querySnapshot) => {
   document.querySelector("#js-captured").innerHTML = htmlData;
 }
 
+// Add eventlistener to play cry upon click
 export const playCryOnClick = () => {
-    // Add eventlistener to play cry when the image gets clicked
   document.querySelectorAll(".captured-item img").forEach((img)=> {
     img.addEventListener("click", (e) => {
       const crySound = new Audio(e.target.dataset.cry);
@@ -25,6 +25,7 @@ export const playCryOnClick = () => {
   })
 }
 
+// Add eventlistener to delete pokemon upon click
 export const releasePokemon = () => {
 const releaseBtns = document.querySelectorAll(".release-btn");
 if(releaseBtns.length > 0) {

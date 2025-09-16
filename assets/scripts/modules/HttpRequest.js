@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://pokeapi.co/api/v2/pokemon/',
+  baseURL: 'https://pokeapi.co/api/v2/',
   timeout: 1000,
 });
 
 // instance
 export const getPokemonData = async (pokeName) => {
   try {
-    const response = await instance.get(pokeName); //fixed
+    const response = await instance.get("pokemon/" + pokeName); //fixed
     return response.data;
   } catch (error) {
     console.error(error);
@@ -18,10 +18,30 @@ export const getPokemonData = async (pokeName) => {
 
 export const getAllPokeNames = async () => {
   try {
-    const response = await instance.get("?limit=10000"); //fixed
+    const response = await instance.get("pokemon/?limit=10000"); //fixed
     return response.data;
   } catch (error) {
     console.error(error);
     alert("Failed to load pokemons' data");
   }
+}
+
+export const getAllTypes = async () => {
+  try {
+    const response = await instance.get("type");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("Failed to load pokemon types");
+  }
+}
+
+export const getPokemonsForEachType = async (type) => {
+    try {
+      const response = await instance.get(`type/${type}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load pokemons with the selected type");
+    }
 }
