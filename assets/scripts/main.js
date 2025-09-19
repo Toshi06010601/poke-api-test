@@ -1,10 +1,10 @@
 import '../styles/style.css';
-import { getPokemonData, getAllPokeNames, getAllTypes , getPokemonsForEachType } from './modules/HttpRequest';
+import { getPokemonData, getAllPokeNames, getAllTypes , getPokemonsForEachType, GetPokemonEvolutionChain } from './modules/HttpRequest';
 import { retrieveApiResponseFromLocal, cacheApiResponseInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions, setTypesInCombobox} from './modules/SuggestPokemons';
-import { getInputName, extractData, showData, autoPlayCry, captureNewPokemon } from './modules/DisplayPokemon';
+import { getInputName, extractData, showData, autoPlayCry, captureNewPokemon, getEvolvesToName } from './modules/DisplayPokemon';
 import { fetchCapturedPokemons } from './modules/database/pokemonService';
-import { showCapturedPokemons, releasePokemon, playCryOnClick } from './modules/ListCapturedPokemons';
+import { showCapturedPokemons, releasePokemon, playCryOnClick, evolvePokemon } from './modules/ListCapturedPokemons';
 
 // Initialize process
 document.addEventListener("DOMContentLoaded", async () => {
@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await showCapturedPokemons(querySnapshot);
   playCryOnClick();
   await releasePokemon();
+  await evolvePokemon();
 });
 
 // Show suggestion as user types in search field
@@ -58,6 +59,20 @@ document.querySelector('#js-types')
   showSuggestions(matchedPokemons);
 });
 
+const $pokeNameField = document.querySelector('input[name="pokeName"]');
+const $typeSelector = document.querySelector('#js-types');
+const showDynamicSuggestions = () => {
+  const currentInput = $pokeNameField.value;
+  const currentType = $typeSelector.value;
+  const pokeNames = retrieveApiResponseFromLocal(currentType);
+  const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
+  showSuggestions(matchedPokemons);
+}
+
+$pokeNameField.addEventListener("click", showDynamicSuggestions);
+$typeSelector.addEventListener("change", showDynamicSuggestions);
+
+
 // Display the selected pokemon
 const submitHandler = async (e) => {
   e.preventDefault();
@@ -69,7 +84,9 @@ const submitHandler = async (e) => {
 
   // If pokeball is clicked, capture the pokemon
   document.querySelector("#js-capture").addEventListener("submit", async (e) => {
-    await captureNewPokemon(e);
+    e.preventDefault();
+    const evolvesTo = await getEvolvesToName(pokemonData.name);
+    await captureNewPokemon(e, evolvesTo);
   });
 }
 

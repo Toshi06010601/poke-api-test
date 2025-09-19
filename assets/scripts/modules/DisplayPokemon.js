@@ -1,4 +1,5 @@
 import { addNewPokemon } from "./database/pokemonService";
+import { GetPokemonSpecies, GetPokemonEvolutionChain } from "./HttpRequest";
 
 // When showing individual pokemon data
 export const getInputName = (e) => {
@@ -45,8 +46,7 @@ export const autoPlayCry = (data) => {
   }, 500);
 }
 
-export const captureNewPokemon = async (e) => {
-  e.preventDefault();
+export const captureNewPokemon = async (e, evolvesTo) => {
   const formData = new FormData(e.target);
 
   // Check if it has been already captured
@@ -55,10 +55,33 @@ export const captureNewPokemon = async (e) => {
 
   // Add the pokemon if not captured yet
   if(samePokemon.length === 0) {
-      await addNewPokemon(formData.get("name"), formData.get("img"), formData.get("cry"));
+      await addNewPokemon(formData.get("name"), formData.get("img"), formData.get("cry"), evolvesTo);
       location.reload();
   } else {
     alert(`${formData.get("name")} was already captured in the past`);
   }
 
+}
+
+export const getEvolvesToName = async (pokemonName) => {
+  let pokemonEvolutionChain = null;
+
+  const pokemonSpecies = await GetPokemonSpecies(pokemonName);
+
+  // If evolution chain exists, get evolution chain's url
+  if(pokemonSpecies.evolution_chain != null) {
+    const url = pokemonSpecies.evolution_chain.url.replace("https://pokeapi.co/api/v2/", "");
+    pokemonEvolutionChain = await GetPokemonEvolutionChain(url);
+  }
+
+  let evolvesToName = null;
+  if (pokemonEvolutionChain.chain.evolves_to != null) {
+    if(pokemonName === pokemonEvolutionChain.chain.species.name) {
+      evolvesToName = pokemonEvolutionChain.chain.evolves_to[0].species.name;
+    } else {
+      evolvesToName = pokemonEvolutionChain.chain.evolves_to[0].evolves_to[0].species.name;
+    }
+  }
+
+  return evolvesToName;
 }
