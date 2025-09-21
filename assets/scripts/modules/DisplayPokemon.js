@@ -2,7 +2,7 @@ import { addNewPokemon } from "./database/pokemonService";
 import { GetPokemonSpecies, GetPokemonEvolutionChain } from "./HttpRequest";
 
 // When showing individual pokemon data
-export const getInputName = (e) => {
+export const getCurrentInput = (e) => {
   const form = new FormData(e.target);
   const pokeName = form.get("pokeName").toLowerCase();
   return pokeName;
@@ -38,12 +38,22 @@ export const showData = (data) => {
   .innerHTML = htmlData
 }
 
-export const autoPlayCry = (data) => {
+export const playCry = (data) => {
   const crySound = new Audio(data.cry);
 
   setTimeout(() => {
   crySound.play();
   }, 500);
+}
+
+// Add zoom-in effect to the pokemon image 
+export const zoomIn = (el) => {
+  const pokemonImg = document.querySelector(el);
+  pokemonImg.addEventListener("load", () => {
+    setTimeout(() => {
+      pokemonImg.classList.toggle("zoom-in");
+    }, 500);
+  });
 }
 
 export const captureNewPokemon = async (e, evolvesTo) => {
@@ -63,25 +73,37 @@ export const captureNewPokemon = async (e, evolvesTo) => {
 
 }
 
+const findEvolvesToName = (evolutionChain, pokemonName) => {
+  if(evolutionChain.species.name === pokemonName) {
+    // Return evolved pokemon if exists, return the current pokemon if not exists
+    const randomNum = Math.round(Math.random * (evolutionChain.evolves_to.length - 1));
+    return evolutionChain.evolves_to.length > 0 ? evolutionChain.evolves_to[randomNum].species.name : evolutionChain.species.name ;
+  } else {
+
+  // Exceptional case for a pokemon like eevve
+  let index = 0;
+  for (let i = 0; i < evolutionChain.evolves_to.length; i++) {
+    if (evolutionChain.evolves_to[i].species.name === pokemonName) {
+      index = i;
+      break
+    };
+  }
+
+    // Call itself until if find the same pokemon
+    return findEvolvesToName(evolutionChain.evolves_to[index], pokemonName);
+  }
+}
+
 export const getEvolvesToName = async (pokemonName) => {
-  let pokemonEvolutionChain = null;
+  // Exceptional case: Return if pokemon name contains "mega" since there is no species info
+  if (pokemonName.toLowerCase().includes("mega")) {
+    return pokemonName;
+  }
 
+  // Get the pokemon's evolution chain
   const pokemonSpecies = await GetPokemonSpecies(pokemonName);
+  const evolutionChainUrl = pokemonSpecies.evolution_chain.url.replace("https://pokeapi.co/api/v2/", "");
+  const pokemonEvolutionChain = await GetPokemonEvolutionChain(evolutionChainUrl);
 
-  // If evolution chain exists, get evolution chain's url
-  if(pokemonSpecies.evolution_chain != null) {
-    const url = pokemonSpecies.evolution_chain.url.replace("https://pokeapi.co/api/v2/", "");
-    pokemonEvolutionChain = await GetPokemonEvolutionChain(url);
-  }
-
-  let evolvesToName = null;
-  if (pokemonEvolutionChain.chain.evolves_to != null) {
-    if(pokemonName === pokemonEvolutionChain.chain.species.name) {
-      evolvesToName = pokemonEvolutionChain.chain.evolves_to[0].species.name;
-    } else {
-      evolvesToName = pokemonEvolutionChain.chain.evolves_to[0].evolves_to[0].species.name;
-    }
-  }
-
-  return evolvesToName;
+  return findEvolvesToName(pokemonEvolutionChain.chain, pokemonName);
 }

@@ -19,7 +19,7 @@ export const showCapturedPokemons = (querySnapshot) => {
 }
 
 // Add eventlistener to play cry upon click
-export const playCryOnClick = () => {
+export const setPlayCryOnClick = () => {
   document.querySelectorAll(".captured-item img").forEach((img)=> {
     img.addEventListener("click", (e) => {
       const crySound = new Audio(e.target.dataset.cry);
@@ -29,7 +29,7 @@ export const playCryOnClick = () => {
 }
 
 // Add eventlistener to delete pokemon upon click
-export const releasePokemon = () => {
+export const setReleasePokemonAction = () => {
 const releaseBtns = document.querySelectorAll(".release-btn");
 if(releaseBtns.length > 0) {
   releaseBtns.forEach(Btn => {
@@ -42,7 +42,7 @@ if(releaseBtns.length > 0) {
 }
 
 // Add eventlistener to evolve pokemon upon click
-export const evolvePokemon = () => {
+export const setEvolvePokemonAction = () => {
 const evolveBtns = document.querySelectorAll(".evolve-btn");
 if(evolveBtns.length > 0) {
   evolveBtns.forEach(Btn => {
@@ -50,7 +50,7 @@ if(evolveBtns.length > 0) {
       const docId = e.target.dataset.id;
       const evolvesToName = e.target.dataset.evolves_to_name;
       const evolvedPokemonData = await getPokemonData(evolvesToName);
-      const nextEvolvesToName = await getEvolvesToName(evolvedPokemonData.id);
+      const nextEvolvesToName = await getEvolvesToName(evolvesToName);
       await updatePokemon(docId, evolvedPokemonData, nextEvolvesToName);
       location.reload();
     })

@@ -2,28 +2,27 @@ import '../styles/style.css';
 import { getPokemonData, getAllPokeNames, getAllTypes , getPokemonsForEachType, GetPokemonEvolutionChain } from './modules/HttpRequest';
 import { retrieveApiResponseFromLocal, cacheApiResponseInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions, setTypesInCombobox} from './modules/SuggestPokemons';
-import { getInputName, extractData, showData, autoPlayCry, captureNewPokemon, getEvolvesToName } from './modules/DisplayPokemon';
+import { extractData, showData, playCry, zoomIn, captureNewPokemon, getEvolvesToName, getCurrentInput } from './modules/DisplayPokemon';
 import { fetchCapturedPokemons } from './modules/database/pokemonService';
-import { showCapturedPokemons, releasePokemon, playCryOnClick, evolvePokemon } from './modules/ListCapturedPokemons';
+import { showCapturedPokemons, setReleasePokemonAction, setPlayCryOnClick, setEvolvePokemonAction } from './modules/ListCapturedPokemons';
 
 // Initialize process
 document.addEventListener("DOMContentLoaded", async () => {
-  // Store poke names and types in local storage
-
-  // Set types in combobox
+  // Cache all types if not cached yet
   if(localStorage.getItem("Types") === null) {
     const types = await getAllTypes();
     cacheApiResponseInLocal(types.results, "Types");
   }
+
+  // Cache all pokemon names if not caches yet
+  if(localStorage.getItem("all") === null) {
+    const response = await getAllPokeNames();
+    const allPokeNames = response.results.map(pokeName => ({ pokemon: pokeName })); // Make the object structure same as other types 
+    cacheApiResponseInLocal(allPokeNames, "all");
+  }
+
+  // Cache pokemons names for each type if not cached yet
   const allTypes = retrieveApiResponseFromLocal("Types");
-  setTypesInCombobox([{name: "all"}, ...allTypes]);
-
-  // Cache all pokemon names 
-  const response = await getAllPokeNames();
-  const allPokeNames = response.results.map(pokeName => ({ pokemon: pokeName })); // Make the object structure same as other types 
-  cacheApiResponseInLocal(allPokeNames, "all");
-
-  // Cache pokemons names for each type
   allTypes.forEach(async (type) => {
     if(localStorage.getItem(type.name) === null) {
       const pokesForEachType = await getPokemonsForEachType(type.name);
@@ -31,58 +30,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // Set types in combobox
+  setTypesInCombobox([{name: "all"}, ...allTypes]);
+
   // Show captured pokemons with cry and release functionalities
   const querySnapshot = await fetchCapturedPokemons();
   await showCapturedPokemons(querySnapshot);
-  playCryOnClick();
-  await releasePokemon();
-  await evolvePokemon();
+  setPlayCryOnClick();
+  await setReleasePokemonAction();
+  await setEvolvePokemonAction();
 });
+
+
 
 // Show suggestion as user types in search field
-document.querySelector('input[name="pokeName"]')
-.addEventListener("input", (e) => {
-  const currentInput = e.target.value;
-  const currentType = document.querySelector("#js-types").value;
-  const pokeNames = retrieveApiResponseFromLocal(currentType);
-  const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
-  showSuggestions(matchedPokemons);
-});
-
-// Show suggestion as user types in search field
-document.querySelector('#js-types')
-.addEventListener("change", (e) => {
-  const currentInput = document.querySelector('input[name="pokeName"]').value;
-  const currentType = document.querySelector("#js-types").value;
-  const pokeNames = retrieveApiResponseFromLocal(currentType);
-  const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
-  showSuggestions(matchedPokemons);
-});
-
-const $pokeNameField = document.querySelector('input[name="pokeName"]');
+const $inputField = document.querySelector('input[name="pokeName"]');
 const $typeSelector = document.querySelector('#js-types');
-const showDynamicSuggestions = () => {
-  const currentInput = $pokeNameField.value;
+const suggestMatchingPokemonNames = () => {
+  const currentInput = $inputField.value.toLowerCase();
   const currentType = $typeSelector.value;
-  const pokeNames = retrieveApiResponseFromLocal(currentType);
-  const matchedPokemons = getMatchingPokemons(pokeNames, currentInput);
+  const pokemonListOfEachType = retrieveApiResponseFromLocal(currentType);
+  const matchedPokemons = getMatchingPokemons(pokemonListOfEachType, currentInput);
   showSuggestions(matchedPokemons);
 }
-
-$pokeNameField.addEventListener("click", showDynamicSuggestions);
-$typeSelector.addEventListener("change", showDynamicSuggestions);
+$inputField.addEventListener("input", suggestMatchingPokemonNames);
+$typeSelector.addEventListener("change", suggestMatchingPokemonNames);
 
 
 // Display the selected pokemon
 const submitHandler = async (e) => {
   e.preventDefault();
-  const inputName = getInputName(e);
-  const pokemonData = await getPokemonData(inputName);
-  const extractedData = extractData(pokemonData)
-  showData(extractedData);
-  autoPlayCry(extractedData);
+  const currentInput = getCurrentInput(e);
+  const pokemonData = await getPokemonData(currentInput.toLowerCase());
+  const pokemonDataToShow = extractData(pokemonData)
+  showData(pokemonDataToShow);
+  playCry(pokemonDataToShow);
 
-  // If pokeball is clicked, capture the pokemon
+  // Set eventListener to capture the pokemon upon click
   document.querySelector("#js-capture").addEventListener("submit", async (e) => {
     e.preventDefault();
     const evolvesTo = await getEvolvesToName(pokemonData.name);
@@ -90,14 +74,8 @@ const submitHandler = async (e) => {
   });
 }
 
+// Set eventlistener to display the selected pokemon
 document.querySelector("#js-form").addEventListener("submit", async (e) => {
   await submitHandler(e);
-
-  // Add zoom-in effect to the pokemon image 
-  const pokemonImg = document.querySelector(".pokemonImg");
-  pokemonImg.addEventListener("load", () => {
-    setTimeout(() => {
-      pokemonImg.classList.toggle("zoom-in");
-    }, 500);
-  });
+  zoomIn(".pokemonImg");
 });
