@@ -76,21 +76,15 @@ export const captureNewPokemon = async (e, evolvesTo) => {
 const findEvolvesToName = (evolutionChain, pokemonName) => {
   if(evolutionChain.species.name === pokemonName) {
     // Return evolved pokemon if exists, return the current pokemon if not exists
-    const randomNum = Math.round(Math.random * (evolutionChain.evolves_to.length - 1));
+    const randomNum = Math.floor(Math.random() * (evolutionChain.evolves_to.length));
     return evolutionChain.evolves_to.length > 0 ? evolutionChain.evolves_to[randomNum].species.name : evolutionChain.species.name ;
   } else {
 
-  // Exceptional case for a pokemon like eevve
-  let index = 0;
-  for (let i = 0; i < evolutionChain.evolves_to.length; i++) {
-    if (evolutionChain.evolves_to[i].species.name === pokemonName) {
-      index = i;
-      break
-    };
-  }
-
     // Call itself until if find the same pokemon
-    return findEvolvesToName(evolutionChain.evolves_to[index], pokemonName);
+    for (let i = 0; i < evolutionChain.evolves_to.length; i++) {
+      const result = findEvolvesToName(evolutionChain.evolves_to[i], pokemonName);
+      if (result != null) return result;
+    }
   }
 }
 
