@@ -1,5 +1,5 @@
 import '../styles/style.css';
-import { getPokemonData, getAllPokeNames, getAllTypes , getPokemonsForEachType, GetPokemonEvolutionChain } from './modules/HttpRequest';
+import { getPokemonData, getAllPokeNames, getAllTypes , getPokemonsForEachType } from './modules/HttpRequest';
 import { retrieveApiResponseFromLocal, cacheApiResponseInLocal} from './modules/LocalStorage';
 import { getMatchingPokemons, showSuggestions, setTypesInCombobox} from './modules/SuggestPokemons';
 import { extractData, showData, playCry, zoomIn, captureNewPokemon, getEvolvesToName, getCurrentInput } from './modules/DisplayPokemon';

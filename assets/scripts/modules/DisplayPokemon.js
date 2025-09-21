@@ -75,7 +75,7 @@ export const captureNewPokemon = async (e, evolvesTo) => {
 
 const findEvolvesToName = (evolutionChain, pokemonName) => {
   if(evolutionChain.species.name === pokemonName) {
-    // Return evolved pokemon if exists, return the current pokemon if not exists
+    // Return evolved pokemon if exists(random evolved pokemon if multiple), return the current pokemon if not exists
     const randomNum = Math.floor(Math.random() * (evolutionChain.evolves_to.length));
     return evolutionChain.evolves_to.length > 0 ? evolutionChain.evolves_to[randomNum].species.name : evolutionChain.species.name ;
   } else {
@@ -90,7 +90,7 @@ const findEvolvesToName = (evolutionChain, pokemonName) => {
 
 export const getEvolvesToName = async (pokemonName) => {
   // Exceptional case: Return if pokemon name contains "mega" since there is no species info
-  if (pokemonName.toLowerCase().includes("mega")) {
+  if (pokemonName.toLowerCase().includes("-")) {
     return pokemonName;
   }
 

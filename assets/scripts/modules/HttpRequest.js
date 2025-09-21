@@ -8,6 +8,7 @@ const instance = axios.create({
 // instance
 export const getPokemonData = async (pokeName) => {
   try {
+    if (pokeName === "") throw new Error("Pokemon name cannot be null.");;
     const response = await instance.get("pokemon/" + pokeName); //fixed
     return response.data;
   } catch (error) {

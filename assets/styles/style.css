@@ -1,4 +1,4 @@
-:root, ::placeholder, input[type="text"] {
+:root, ::placeholder, input[type="text"], select {
   font-family: "Press Start 2P", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -19,6 +19,10 @@
   font-weight: 200;
   color: #aaa;
   background-color: transparent;
+}
+
+select {
+  padding: 0 10px;
 }
 
 input[type="text"] {
